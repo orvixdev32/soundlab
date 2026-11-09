@@ -1,38 +1,55 @@
+import React from 'react';
 import styles from './TopBar.module.css';
 
-const navigationItems = [
-  { label: 'Home', href: '#home' },
-  { label: 'Scenes', href: '#scenes' },
-  { label: 'About', href: '#about' },
+export type NavTab = 'home' | 'scenes' | 'about';
+
+interface TopBarProps {
+  activeTab: NavTab;
+  onTabChange: (tab: NavTab) => void;
+}
+
+const navigationItems: { label: string; tab: NavTab }[] = [
+  { label: 'Home', tab: 'home' },
+  { label: 'Scenes', tab: 'scenes' },
+  { label: 'About', tab: 'about' },
 ];
 
-function TopBar() {
+export const TopBar: React.FC<TopBarProps> = ({ activeTab, onTabChange }) => {
   return (
     <header className={styles.topBar}>
-      <a className={styles.logo} href="#home">
-        soundlab.
-      </a>
-
-      <nav
-        className={styles.navigation}
-        aria-label="Main navigation"
+      <button
+        type="button"
+        className={styles.logo}
+        onClick={() => onTabChange('home')}
       >
-        {navigationItems.map((item) => (
-          <a
-            key={item.label}
-            className={styles.link}
-            href={item.href}
-          >
-            {item.label}
-          </a>
-        ))}
+        soundlab.
+      </button>
+
+      <nav className={styles.navigation} aria-label="Main navigation">
+        {navigationItems.map((item) => {
+          const isActive = activeTab === item.tab;
+          return (
+            <button
+              key={item.tab}
+              type="button"
+              className={`${styles.link} ${isActive ? styles.activeLink : ''}`}
+              onClick={() => onTabChange(item.tab)}
+            >
+              {item.label}
+            </button>
+          );
+        })}
       </nav>
 
-      <a className={styles.contact} href="#contact">
-        Contact
-      </a>
+      <button
+        type="button"
+        className={styles.contact}
+        onClick={() => onTabChange('about')}
+      >
+        About
+      </button>
     </header>
   );
-}
+};
 
 export default TopBar;

@@ -17,7 +17,8 @@
   min-height: 100vh;
   min-height: 100svh;
 
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   color: var(--color-text);
   background-color: #c5dce7;
@@ -29,11 +30,13 @@
       rgba(224, 239, 246, 0.08) 50%,
       rgba(165, 199, 216, 0.14) 100%
     ),
-    url('./images/forest.jpg');
+    var(--current-bg, url('./images/forest.jpg'));
 
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  background-attachment: fixed;
+  transition: background-image 400ms ease;
 }
 
 /* ========================================
