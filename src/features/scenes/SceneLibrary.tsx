@@ -8,6 +8,7 @@ interface SceneLibraryProps {
   scenes: Scene[];
   onSceneChange?: (scene: Scene | null) => void;
   onOpenConstructor?: () => void;
+  isPlaying?: boolean;
 }
 
 export const SceneLibrary: React.FC<SceneLibraryProps> = ({
@@ -49,39 +50,46 @@ export const SceneLibrary: React.FC<SceneLibraryProps> = ({
   }
 
   return (
-    <section id="scenes" className={styles.librarySection} aria-label="Scene Library">
-      <div className={styles.header}>
-        <span className={styles.tagline}>Atmospheres</span>
-        <h2 className={styles.title}>Curated Soundscapes</h2>
-        <p className={styles.subtitle}>
-          Select a preset atmosphere to enter its dedicated scene space and fine-tune each sound layer.
+    <section className={styles.container} aria-label="Curated Atmospheres Archive">
+      <header className={styles.editorialHeader}>
+        <div className={styles.leadColumn}>
+          <span className={styles.kicker}>Index of Atmospheres / v2.4</span>
+          <h1 className={styles.heading}>
+            Curated environments for <span className={styles.headingEm}>deep focus</span> & reverie.
+          </h1>
+        </div>
+        <p className={styles.description}>
+          Every soundscape is an acoustic ecosystem composed of multi-channel audio layers.
+          Step inside to calibrate individual frequencies, winds, precipitation, and room acoustics.
         </p>
-      </div>
+      </header>
 
-      <div className={styles.filterBar} role="tablist" aria-label="Filter scenes by mood">
-        {categories.map((category) => (
-          <button
-            key={category}
-            type="button"
-            className={`${styles.filterBtn} ${selectedCategory === category ? styles.activeFilter : ''}`}
-            onClick={() => setSelectedCategory(category)}
-          >
-            {category}
-          </button>
-        ))}
+      <div className={styles.controlBar}>
+        <div className={styles.filterGroup} role="tablist" aria-label="Filter by mood">
+          {categories.map((category) => (
+            <button
+              key={category}
+              type="button"
+              className={`${styles.filterButton} ${selectedCategory === category ? styles.active : ''}`}
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
 
         {onOpenConstructor && (
           <button
             type="button"
-            className={styles.createBtn}
+            className={styles.newSceneBtn}
             onClick={onOpenConstructor}
           >
-            <span>+ Create Scene</span>
+            <span>+ Construct Soundscape</span>
           </button>
         )}
       </div>
 
-      <div className={styles.grid}>
+      <div className={styles.galleryGrid}>
         {filteredScenes.map((scene) => (
           <SceneCard
             key={scene.id}

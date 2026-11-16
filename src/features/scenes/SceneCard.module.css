@@ -1,180 +1,151 @@
 .card {
-  position: relative;
-  border-radius: 24px;
-  overflow: hidden;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.45) 0%,
-    rgba(223, 242, 252, 0.25) 50%,
-    rgba(255, 255, 255, 0.20) 100%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
-  box-shadow: 0 10px 30px rgba(30, 67, 88, 0.12),
-              inset 0 1px 0 rgba(255, 255, 255, 0.7);
   display: flex;
   flex-direction: column;
-  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 300ms ease,
-              border-color 300ms ease;
+  background-color: var(--bg-base);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  overflow: hidden;
   cursor: pointer;
+  transition: border-color var(--duration-normal) var(--ease-out),
+              transform var(--duration-normal) var(--ease-out);
   text-align: left;
+  position: relative;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 18px 40px rgba(30, 67, 88, 0.18),
-              inset 0 1px 0 #ffffff;
+  border-color: var(--border-medium);
+  transform: translateY(-2px);
 }
 
-.imageWrapper {
+.card:focus-visible {
+  outline: 2px solid var(--accent-amber);
+  outline-offset: 2px;
+}
+
+.mediaFrame {
   position: relative;
   width: 100%;
-  height: 200px;
+  aspect-ratio: 16 / 10;
   overflow: hidden;
+  background-color: var(--bg-surface);
 }
 
 .image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  filter: grayscale(15%) contrast(95%);
+  transition: transform var(--duration-slow) var(--ease-out),
+              filter var(--duration-slow) var(--ease-out);
 }
 
 .card:hover .image {
-  transform: scale(1.04);
+  transform: scale(1.03);
+  filter: grayscale(0%) contrast(100%);
 }
 
-.overlay {
+.metaOverlay {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(30, 45, 55, 0.4) 100%);
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
 }
 
-.badge {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: #172b35;
-  font-family: var(--font-body);
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
-  text-transform: capitalize;
-  padding: 5px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+.categoryTag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background-color: rgba(14, 17, 19, 0.75);
+  backdrop-filter: blur(8px);
+  padding: 4px 8px;
+  border-radius: 2px;
+  border: 1px solid var(--border-subtle);
 }
 
-.content {
-  padding: 22px 24px;
+.layerCount {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  background-color: rgba(14, 17, 19, 0.75);
+  padding: 4px 8px;
+  border-radius: 2px;
+}
+
+.body {
+  padding: 20px 22px 24px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
-.header {
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
   margin-bottom: 6px;
 }
 
 .title {
   margin: 0;
-  font-family: var(--font-body);
-  font-size: 1.45rem;
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
   font-weight: 600;
-  color: #121c21;
+  color: var(--text-primary);
   letter-spacing: -0.01em;
 }
 
 .subtitle {
-  margin: 4px 0 0;
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  color: #3f4e56;
-  font-weight: 400;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  color: var(--accent-sand);
+  margin: 0 0 12px 0;
 }
 
 .description {
-  margin: 10px 0 16px;
-  font-family: var(--font-body);
-  font-size: 0.92rem;
-  line-height: 1.5;
-  color: #272a2d;
-  opacity: 0.88;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0 0 20px 0;
   flex-grow: 1;
 }
 
-.layersSection {
-  margin-top: auto;
-  padding-top: 14px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
 }
 
-.layersLabel {
-  font-family: var(--font-body);
-  font-size: 0.75rem;
-  color: #4b5860;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.layerChips {
+.layersPreview {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-.chip {
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  color: #1a252b;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-family: var(--font-body);
+.layerItem {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
 }
 
-.footer {
-  margin-top: 18px;
+.actionPrompt {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent-amber);
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 4px;
+  transition: transform var(--duration-fast) ease;
 }
 
-.layerCount {
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  color: #4b5860;
-}
-
-.actionButton {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 38px;
-  padding: 0 18px;
-  border-radius: 999px;
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  background-color: #272a2d;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 12px rgba(21, 30, 35, 0.2);
-  transition: background-color 250ms ease, transform 150ms ease;
-}
-
-.actionButton:hover {
-  background-color: #384247;
-  transform: translateY(-1px);
+.card:hover .actionPrompt {
+  transform: translateX(3px);
 }

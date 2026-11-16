@@ -8,10 +8,10 @@ interface SceneCardProps {
   onOpen: (scene: Scene) => void;
 }
 
-export const SceneCard: React.FC<SceneCardProps> = ({ scene, isActive, onOpen }) => {
+export const SceneCard: React.FC<SceneCardProps> = ({ scene, onOpen }) => {
   return (
     <article
-      className={`${styles.card} ${isActive ? styles.active : ''}`}
+      className={styles.card}
       onClick={() => onOpen(scene)}
       role="button"
       tabIndex={0}
@@ -21,52 +21,36 @@ export const SceneCard: React.FC<SceneCardProps> = ({ scene, isActive, onOpen })
           onOpen(scene);
         }
       }}
-      aria-label={`Open scene ${scene.title}`}
+      aria-label={`Enter soundscape: ${scene.title}`}
     >
-      <div className={styles.imageWrapper}>
+      <div className={styles.mediaFrame}>
         <img
           src={scene.coverImage}
           alt={scene.title}
           className={styles.image}
           loading="lazy"
         />
-        <div className={styles.overlay} />
-        <span className={styles.badge}>{scene.category}</span>
+        <div className={styles.metaOverlay}>
+          <span className={styles.categoryTag}>{scene.category}</span>
+          <span className={styles.layerCount}>{scene.layers.length} Layers</span>
+        </div>
       </div>
 
-      <div className={styles.content}>
-        <div className={styles.header}>
+      <div className={styles.body}>
+        <div className={styles.titleRow}>
           <h3 className={styles.title}>{scene.title}</h3>
-          <p className={styles.subtitle}>{scene.subtitle}</p>
         </div>
-
+        <div className={styles.subtitle}>{scene.subtitle}</div>
         <p className={styles.description}>{scene.description}</p>
 
-        <div className={styles.layersSection}>
-          <div className={styles.layersLabel}>Included Layers</div>
-          <div className={styles.layerChips}>
-            {scene.layers.map((layer) => (
-              <span key={layer.soundId} className={styles.chip}>
-                {layer.name}
-              </span>
-            ))}
-          </div>
-        </div>
-
         <div className={styles.footer}>
-          <span className={styles.layerCount}>
-            {scene.layers.length} {scene.layers.length === 1 ? 'layer' : 'layers'}
-          </span>
-          <button
-            type="button"
-            className={styles.actionButton}
-            onClick={(e) => {
-              e.stopPropagation();
-              onOpen(scene);
-            }}
-          >
-            Customize Scene →
-          </button>
+          <div className={styles.layersPreview}>
+            <span className={styles.layerItem}>
+              {scene.layers.slice(0, 3).map((l) => l.name).join(' · ')}
+              {scene.layers.length > 3 ? ' +' : ''}
+            </span>
+          </div>
+          <span className={styles.actionPrompt}>Enter Environment →</span>
         </div>
       </div>
     </article>

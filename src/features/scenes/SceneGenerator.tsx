@@ -7,14 +7,13 @@ interface SceneGeneratorProps {
   onSceneCreated: (newScene: Scene) => void;
 }
 
-// Набір надійних якісних атмосферних пресетів
 const CURATED_PRESETS: { label: string; url: string }[] = [
-  { label: 'Desert Dunes', url: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=1200&q=80' },
-  { label: 'Pine Forest', url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80' },
-  { label: 'Night Stars', url: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1200&q=80' },
-  { label: 'Cozy Fireplace', url: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1200&q=80' },
-  { label: 'Ocean Twilight', url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80' },
-  { label: 'Rainy City', url: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1200&q=80' },
+  { label: 'Dunes', url: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=1200&q=80' },
+  { label: 'Misty Pine', url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80' },
+  { label: 'Deep Cosmos', url: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1200&q=80' },
+  { label: 'Warm Hearth', url: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1200&q=80' },
+  { label: 'Solitary Ocean', url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80' },
+  { label: 'Night City', url: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1200&q=80' },
 ];
 
 export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }) => {
@@ -24,13 +23,12 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
   const [category, setCategory] = useState<'focus' | 'relax' | 'nature' | 'urban'>('nature');
   const [keyword, setKeyword] = useState<string>('desert');
 
-  // Cover image states
+  // Canvas visual state
   const [coverUrl, setCoverUrl] = useState<string>(CURATED_PRESETS[0].url);
   const [isSearchingImage, setIsSearchingImage] = useState<boolean>(false);
-  const [imageError, setImageError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Selected sounds IDs map
+  // Selected tracks matrix
   const [selectedSoundIds, setSelectedSoundIds] = useState<string[]>([
     'rain-gentle',
     'wind-breeze',
@@ -42,11 +40,10 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
     );
   };
 
-  // Пошук фото через Wikipedia Wikimedia API за ключовим словом
+  // Wikipedia Open Media Search
   const fetchImageByKeyword = async (query: string) => {
     if (!query.trim()) return;
     setIsSearchingImage(true);
-    setImageError(null);
 
     try {
       const endpoint = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(
@@ -68,31 +65,19 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
         }
       }
 
-      // Якщо нічого специфічного не знайдено — fallback на випадковий picsum
       setCoverUrl(`https://picsum.photos/1200/800?random=${Date.now()}`);
     } catch {
-      setImageError('Failed to fetch image. Falling back to default.');
       setCoverUrl(CURATED_PRESETS[0].url);
     } finally {
       setIsSearchingImage(false);
     }
   };
 
-  // Під час втрати фокусу з назви або теми
-  const handleThemeBlur = () => {
-    const term = keyword.trim() || title.trim();
-    if (term) {
-      fetchImageByKeyword(term);
-    }
-  };
-
-  // Завантаження власного фото з диска користувача (працює без бекенду)
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const localUrl = URL.createObjectURL(file);
       setCoverUrl(localUrl);
-      setImageError(null);
     }
   };
 
@@ -113,10 +98,10 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
     const newScene: Scene = {
       id: `custom-${Date.now()}`,
       title: title.trim(),
-      subtitle: subtitle.trim() || 'Custom Atmosphere',
+      subtitle: subtitle.trim() || 'Custom Acoustic Space',
       description:
         description.trim() ||
-        `Handcrafted soundscape featuring ${layers.map((l) => l.name).join(', ')}.`,
+        `Atmosphere engineered with ${layers.map((l) => l.name).join(', ')}.`,
       category,
       coverImage: coverUrl,
       layers,
@@ -126,29 +111,30 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
   };
 
   return (
-    <div className={styles.generatorContainer}>
-      <div className={styles.header}>
-        <span className={styles.tagline}>Constructor</span>
-        <h2 className={styles.title}>Create Atmosphere</h2>
+    <div className={styles.container}>
+      <header className={styles.header}>
+        <span className={styles.kicker}>Atelier / Scene Synthesis</span>
+        <h1 className={styles.title}>Construct custom acoustic chamber</h1>
         <p className={styles.subtitle}>
-          Mix your favorite sounds, choose a mood, and select or generate a stunning backdrop.
+          Assemble bespoke multi-track environments by combining acoustic layers, mood archetypes,
+          and atmospheric visual backdrops.
         </p>
-      </div>
+      </header>
 
-      <form className={styles.formGrid} onSubmit={handleCreateScene}>
-        {/* Left Side: Metadata & Background Generator */}
-        <div className={styles.card}>
-          <h3 className={styles.sectionTitle}>1. Scene Identity</h3>
+      <form className={styles.workGrid} onSubmit={handleCreateScene}>
+        {/* Module 1: Architecture & Visual Scenery */}
+        <div className={styles.panel}>
+          <h2 className={styles.panelTitle}>1. Environment Blueprint</h2>
 
-          <div className={styles.inputGroup}>
-            <label className={styles.label} htmlFor="scene-title">
-              Scene Name *
+          <div className={styles.fieldGroup}>
+            <label className={styles.fieldLabel} htmlFor="scene-title">
+              Chamber Identifier *
             </label>
             <input
               id="scene-title"
               type="text"
               required
-              placeholder="e.g. Desert Oasis, Rainy Tokyo..."
+              placeholder="e.g. Nordic Fjords, Tokyo Midnight..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               onBlur={() => {
@@ -157,41 +143,41 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
                   fetchImageByKeyword(title.trim());
                 }
               }}
-              className={styles.input}
+              className={styles.fieldInput}
             />
           </div>
 
-          <div className={styles.inputGroup}>
-            <label className={styles.label} htmlFor="scene-subtitle">
-              Subtitle
+          <div className={styles.fieldGroup}>
+            <label className={styles.fieldLabel} htmlFor="scene-subtitle">
+              Atmospheric Subtitle
             </label>
             <input
               id="scene-subtitle"
               type="text"
-              placeholder="e.g. Warm Wind & Golden Sands"
+              placeholder="e.g. Dense Fog & Low Frequency Rain"
               value={subtitle}
               onChange={(e) => setSubtitle(e.target.value)}
-              className={styles.input}
+              className={styles.fieldInput}
             />
           </div>
 
-          <div className={styles.inputGroup}>
-            <label className={styles.label} htmlFor="scene-desc">
-              Description (optional)
+          <div className={styles.fieldGroup}>
+            <label className={styles.fieldLabel} htmlFor="scene-desc">
+              Curator Notes (Optional)
             </label>
             <textarea
               id="scene-desc"
-              placeholder="Describe your atmosphere..."
+              placeholder="Atmospheric narrative..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className={styles.textarea}
+              className={styles.fieldTextarea}
               rows={2}
             />
           </div>
 
-          <div className={styles.inputGroup}>
-            <label className={styles.label} htmlFor="scene-category">
-              Mood Category
+          <div className={styles.fieldGroup}>
+            <label className={styles.fieldLabel} htmlFor="scene-category">
+              Mood Archetype
             </label>
             <select
               id="scene-category"
@@ -199,116 +185,106 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
               onChange={(e) =>
                 setCategory(e.target.value as 'focus' | 'relax' | 'nature' | 'urban')
               }
-              className={styles.select}
+              className={styles.fieldSelect}
             >
-              <option value="nature">Nature</option>
-              <option value="focus">Focus</option>
-              <option value="relax">Relax</option>
-              <option value="urban">Urban</option>
+              <option value="nature">Nature / Organic</option>
+              <option value="focus">Focus / Intellectual</option>
+              <option value="relax">Relax / Restorative</option>
+              <option value="urban">Urban / Architectural</option>
             </select>
           </div>
 
-          {/* Theme search input */}
-          <div className={styles.inputGroup}>
-            <label className={styles.label} htmlFor="scene-keyword">
-              Search Backdrop by Word
+          {/* Visual Scenery Query */}
+          <div className={styles.fieldGroup}>
+            <label className={styles.fieldLabel} htmlFor="scene-keyword">
+              Query Backdrop By Keyword
             </label>
-            <div className={styles.searchRow}>
+            <div className={styles.searchBar}>
               <input
                 id="scene-keyword"
                 type="text"
-                placeholder="e.g. desert, dunes, stars, forest..."
+                placeholder="e.g. dunes, fog, rain..."
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
-                onBlur={handleThemeBlur}
-                className={styles.input}
+                className={styles.fieldInput}
               />
               <button
                 type="button"
-                className={styles.searchBtn}
+                className={styles.actionBtn}
                 onClick={() => fetchImageByKeyword(keyword)}
                 disabled={isSearchingImage}
               >
-                {isSearchingImage ? 'Searching...' : 'Find Photo'}
+                {isSearchingImage ? 'Searching' : 'Search Canvas'}
               </button>
             </div>
           </div>
 
-          {/* Image Preview */}
-          <div className={styles.imagePreviewWrapper}>
+          {/* Scenery Viewport */}
+          <div className={styles.visualViewport}>
             <img
               src={coverUrl}
-              alt="Scene preview"
-              className={styles.previewImg}
-              onError={() => {
-                // Якщо картинка не завантажилась — підставляємо надійний дефолт
-                setCoverUrl(CURATED_PRESETS[0].url);
-              }}
+              alt="Canvas Preview"
+              className={styles.viewportImg}
+              onError={() => setCoverUrl(CURATED_PRESETS[0].url)}
             />
             {isSearchingImage && (
-              <div className={styles.imageOverlay}>Finding live backdrop...</div>
+              <div className={styles.viewportOverlay}>Resolving Media Canvas...</div>
             )}
           </div>
-          {imageError && <div className={styles.errorText}>{imageError}</div>}
 
-          {/* Preset Buttons & Custom File Upload */}
-          <div className={styles.presetSection}>
-            <span className={styles.presetLabel}>Quick Presets:</span>
-            <div className={styles.presetChips}>
-              {CURATED_PRESETS.map((p) => (
-                <button
-                  key={p.label}
-                  type="button"
-                  className={`${styles.presetBtn} ${coverUrl === p.url ? styles.activePreset : ''}`}
-                  onClick={() => setCoverUrl(p.url)}
-                >
-                  {p.label}
-                </button>
-              ))}
-            </div>
+          {/* Presets & Local Upload */}
+          <div className={styles.presetBar}>
+            {CURATED_PRESETS.map((p) => (
+              <button
+                key={p.label}
+                type="button"
+                className={`${styles.presetChip} ${coverUrl === p.url ? styles.selected : ''}`}
+                onClick={() => setCoverUrl(p.url)}
+              >
+                {p.label}
+              </button>
+            ))}
           </div>
 
-          <div className={styles.uploadRow}>
-            <input
-              type="file"
-              ref={fileInputRef}
-              accept="image/*"
-              style={{ display: 'none' }}
-              onChange={handleFileUpload}
-            />
-            <button
-              type="button"
-              className={styles.uploadBtn}
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <span>📁 Upload Your Own Photo</span>
-            </button>
-          </div>
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept="image/*"
+            style={{ display: 'none' }}
+            onChange={handleFileUpload}
+          />
+          <button
+            type="button"
+            className={styles.uploadTrigger}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            ↑ Mount Custom Image File
+          </button>
         </div>
 
-        {/* Right Side: Sound Layers Selector */}
-        <div className={styles.card}>
-          <h3 className={styles.sectionTitle}>
-            2. Choose Sound Layers ({selectedSoundIds.length} selected)
-          </h3>
+        {/* Module 2: Channel Matrix */}
+        <div className={styles.panel}>
+          <h2 className={styles.panelTitle}>
+            2. Sound Layer Matrix ({selectedSoundIds.length} Selected)
+          </h2>
 
-          <div className={styles.soundList}>
+          <div className={styles.matrixGrid}>
             {availableSounds.map((sound) => {
               const isSelected = selectedSoundIds.includes(sound.id);
               return (
                 <label
                   key={sound.id}
-                  className={`${styles.soundItem} ${isSelected ? styles.selected : ''}`}
+                  className={`${styles.matrixItem} ${isSelected ? styles.active : ''}`}
                 >
-                  <div className={styles.soundInfo}>
-                    <span className={styles.soundName}>{sound.name}</span>
-                    <span className={styles.soundCategory}>{sound.category}</span>
+                  <div className={styles.trackData}>
+                    <span className={styles.trackTitle}>{sound.name}</span>
+                    <span className={styles.trackCategory}>{sound.category}</span>
                   </div>
                   <input
                     type="checkbox"
                     checked={isSelected}
                     onChange={() => handleToggleSound(sound.id)}
-                    className={styles.checkbox}
+                    className={styles.matrixCheck}
                   />
                 </label>
               );
@@ -317,18 +293,11 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
 
           <button
             type="submit"
-            className={styles.submitBtn}
+            className={styles.submitButton}
             disabled={!title.trim() || selectedSoundIds.length === 0}
           >
-            <span>Create & Enter Scene →</span>
+            Synthesize & Engage Environment →
           </button>
-          <div className={styles.hint}>
-            {!title.trim()
-              ? 'Enter a scene name to continue'
-              : selectedSoundIds.length === 0
-              ? 'Select at least 1 sound layer'
-              : 'Your new scene will open directly in the mixer'}
-          </div>
         </div>
       </form>
     </div>
