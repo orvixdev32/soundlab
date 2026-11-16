@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { Scene } from '../../types/scene';
 import { globalAudioEngine } from '../../audio/AudioEngine';
 import { getSoundSrc } from '../../data/sounds';
@@ -15,9 +15,23 @@ interface LayerState {
   hasAudio: boolean;
 }
 
+const TIMER_OPTIONS = [
+  { label: 'Off', minutes: 0 },
+  { label: '15m', minutes: 15 },
+  { label: '30m', minutes: 30 },
+  { label: '45m', minutes: 45 },
+  { label: '60m', minutes: 60 },
+];
+
 export const SceneDetailView: React.FC<SceneDetailViewProps> = ({ scene, onBack }) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [masterVolume, setMasterVolume] = useState<number>(0.8);
+
+  // Timer states
+  const [timerDuration, setTimerDuration] = useState<number>(0); // minutes (0 = off)
+  const [secondsRemaining, setSecondsRemaining] = useState<number | null>(null);
+  const [isTimerDropdownOpen, setIsTimerDropdownOpen] = useState<boolean>(false);
+  const timerDropdownRef = useRef<HTMLDivElement>(null);
 
   const [layersState, setLayersState] = useState<Record<string, LayerState>>(() => {
     const initial: Record<string, LayerState> = {};
@@ -43,7 +57,6 @@ export const SceneDetailView: React.FC<SceneDetailViewProps> = ({ scene, onBack 
       .filter((l) => Boolean(l.src));
 
     if (activeLayers.length > 0) {
-      // Підготовка аудіодоріжок
       globalAudioEngine.setSceneLayers(activeLayers, false);
       globalAudioEngine.setMasterVolume(masterVolume);
     }
@@ -53,14 +66,81 @@ export const SceneDetailView: React.FC<SceneDetailViewProps> = ({ scene, onBack 
     };
   }, [scene]);
 
+  // Закриття випадайки таймера при кліку поза нею
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        timerDropdownRef.current &&
+        !timerDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsTimerDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Логіка відліку таймера
+  useEffect(() => {
+    if (!isPlaying || secondsRemaining === null || secondsRemaining <= 0) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setSecondsRemaining((prev) => {
+        if (prev === null || prev <= 1) {
+          clearInterval(interval);
+          // Таймер завершився: плавно ставимо на паузу за 2 секунди
+          globalAudioEngine.pause(2.0);
+          setIsPlaying(false);
+          setTimerDuration(0);
+          return null;
+        }
+
+        // Коли залишилось рівно 10 секунд — починаємо повільний fade-out
+        if (prev === 10) {
+          globalAudioEngine.pause(10.0);
+        }
+
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isPlaying, secondsRemaining]);
+
   const handleTogglePlayback = async () => {
     if (isPlaying) {
-      globalAudioEngine.pause();
+      // Плавна зупинка (1.0 секунда)
+      await globalAudioEngine.pause(1.0);
       setIsPlaying(false);
     } else {
-      await globalAudioEngine.play();
+      // Плавний старт (1.5 секунди)
+      await globalAudioEngine.play(1.5);
       setIsPlaying(true);
     }
+  };
+
+  const handleSelectTimer = (minutes: number) => {
+    setTimerDuration(minutes);
+    setIsTimerDropdownOpen(false);
+
+    if (minutes === 0) {
+      setSecondsRemaining(null);
+    } else {
+      setSecondsRemaining(minutes * 60);
+      // Якщо сцена ще не грала — автоматично запускаємо її з плавним наростанням
+      if (!isPlaying) {
+        globalAudioEngine.play(1.5);
+        setIsPlaying(true);
+      }
+    }
+  };
+
+  const formatRemainingTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
   const handleMasterVolumeChange = (vol: number) => {
@@ -121,7 +201,45 @@ export const SceneDetailView: React.FC<SceneDetailViewProps> = ({ scene, onBack 
         <button type="button" className={styles.backButton} onClick={handleBack}>
           ← Back to All Scenes
         </button>
+
         <div className={styles.navRightGroup}>
+          {/* Sleep / Focus Timer Control */}
+          <div className={styles.timerWrapper} ref={timerDropdownRef}>
+            <button
+              type="button"
+              className={`${styles.timerButton} ${timerDuration > 0 ? styles.timerActive : ''}`}
+              onClick={() => setIsTimerDropdownOpen(!isTimerDropdownOpen)}
+              title="Set Sleep / Focus Timer"
+            >
+              <span>⏱</span>
+              <span>
+                {secondsRemaining !== null && isPlaying
+                  ? formatRemainingTime(secondsRemaining)
+                  : timerDuration > 0
+                  ? `${timerDuration}m`
+                  : 'Timer'}
+              </span>
+            </button>
+
+            {isTimerDropdownOpen && (
+              <div className={styles.timerDropdown} role="menu">
+                <div className={styles.timerDropdownHeader}>Timer & Fade Out</div>
+                {TIMER_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.minutes}
+                    type="button"
+                    className={`${styles.timerOption} ${timerDuration === opt.minutes ? styles.selectedOption : ''}`}
+                    onClick={() => handleSelectTimer(opt.minutes)}
+                  >
+                    <span>{opt.label}</span>
+                    {timerDuration === opt.minutes && <span className={styles.checkMark}>✓</span>}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Play / Pause with Fade Transition */}
           <button
             type="button"
             className={`${styles.playToggleButton} ${isPlaying ? styles.isPlaying : ''}`}
@@ -130,6 +248,7 @@ export const SceneDetailView: React.FC<SceneDetailViewProps> = ({ scene, onBack 
           >
             <span>{isPlaying ? '⏸ Pause Atmosphere' : '▶ Play Atmosphere'}</span>
           </button>
+
           <span className={styles.modeBadge}>Scene Customizer</span>
         </div>
       </div>

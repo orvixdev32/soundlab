@@ -1,6 +1,7 @@
 /**
  * Web Audio Engine for soundlab
- * Manages AudioContext, GainNodes for each layer, and seamless looping.
+ * Manages AudioContext, GainNodes for each layer, seamless looping,
+ * and smooth fade in / fade out transitions.
  */
 
 interface TrackNode {
@@ -17,6 +18,7 @@ export class AudioEngine {
   private tracks: Map<string, TrackNode> = new Map();
   private isPlaying: boolean = false;
   private masterVolume: number = 0.8;
+  private fadeTimeoutId: number | null = null;
 
   private initContext(): AudioContext {
     if (!this.ctx) {
@@ -30,6 +32,13 @@ export class AudioEngine {
       this.ctx.resume();
     }
     return this.ctx;
+  }
+
+  private clearFadeTimeout(): void {
+    if (this.fadeTimeoutId !== null) {
+      window.clearTimeout(this.fadeTimeoutId);
+      this.fadeTimeoutId = null;
+    }
   }
 
   public async setSceneLayers(
@@ -64,28 +73,78 @@ export class AudioEngine {
     });
 
     if (autoPlay) {
-      await this.play();
+      await this.play(1.5);
     }
   }
 
-  public async play(): Promise<void> {
+  /**
+   * Play with optional smooth fade-in
+   * @param fadeDuration Duration in seconds (e.g. 1.5)
+   */
+  public async play(fadeDuration: number = 1.5): Promise<void> {
     const ctx = this.initContext();
+    this.clearFadeTimeout();
+
     if (ctx.state === 'suspended') {
       await ctx.resume();
     }
 
+    if (this.masterGain) {
+      // Start from 0 and smoothly ramp up to masterVolume
+      this.masterGain.gain.cancelScheduledValues(ctx.currentTime);
+      this.masterGain.gain.setValueAtTime(0, ctx.currentTime);
+      this.masterGain.gain.linearRampToValueAtTime(
+        this.masterVolume,
+        ctx.currentTime + Math.max(0.05, fadeDuration)
+      );
+    }
+
     const promises: Promise<void>[] = [];
     this.tracks.forEach((track) => {
-      promises.push(track.audio.play().catch((err) => {
-        console.warn('Playback error / Autoplay prevented:', err);
-      }));
+      promises.push(
+        track.audio.play().catch((err) => {
+          console.warn('Playback error / Autoplay prevented:', err);
+        })
+      );
     });
 
     await Promise.allSettled(promises);
     this.isPlaying = true;
   }
 
-  public pause(): void {
+  /**
+   * Pause with optional smooth fade-out
+   * @param fadeDuration Duration in seconds (e.g. 1.0)
+   */
+  public async pause(fadeDuration: number = 1.0): Promise<void> {
+    this.clearFadeTimeout();
+
+    if (!this.ctx || !this.masterGain || fadeDuration <= 0) {
+      this.pauseImmediately();
+      return;
+    }
+
+    const ctx = this.ctx;
+    const currentGain = this.masterGain.gain.value;
+
+    this.masterGain.gain.cancelScheduledValues(ctx.currentTime);
+    this.masterGain.gain.setValueAtTime(currentGain, ctx.currentTime);
+    this.masterGain.gain.linearRampToValueAtTime(0.0001, ctx.currentTime + fadeDuration);
+
+    // Wait until fade out finishes, then pause audio elements
+    await new Promise<void>((resolve) => {
+      this.fadeTimeoutId = window.setTimeout(() => {
+        this.pauseImmediately();
+        if (this.masterGain && this.ctx) {
+          // Restore gain setting for future play calls
+          this.masterGain.gain.setValueAtTime(this.masterVolume, this.ctx.currentTime);
+        }
+        resolve();
+      }, fadeDuration * 1000);
+    });
+  }
+
+  private pauseImmediately(): void {
     this.tracks.forEach((track) => {
       track.audio.pause();
     });
@@ -94,7 +153,7 @@ export class AudioEngine {
 
   public setMasterVolume(volume: number): void {
     this.masterVolume = Math.max(0, Math.min(1, volume));
-    if (this.masterGain && this.ctx) {
+    if (this.masterGain && this.ctx && this.isPlaying) {
       this.masterGain.gain.setTargetAtTime(this.masterVolume, this.ctx.currentTime, 0.05);
     }
   }
@@ -122,7 +181,8 @@ export class AudioEngine {
   }
 
   public stopAll(): void {
-    this.pause();
+    this.clearFadeTimeout();
+    this.pauseImmediately();
     this.tracks.forEach((track) => {
       track.audio.pause();
       track.audio.src = '';
