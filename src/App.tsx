@@ -2,19 +2,31 @@ import { useState } from 'react';
 import TopBar from './components/layout/TopBar';
 import type { NavTab } from './components/layout/TopBar';
 import SceneLibrary from './features/scenes/SceneLibrary';
+import SceneGenerator from './features/scenes/SceneGenerator';
+import SceneDetailView from './features/scenes/SceneDetailView';
+import { presetScenes } from './data/presets';
 import type { Scene } from './types/scene';
 import './App.css';
 
 function App() {
   const [activeTab, setActiveTab] = useState<NavTab>('home');
+  const [allScenes, setAllScenes] = useState<Scene[]>(presetScenes);
   const [activeCustomizingScene, setActiveCustomizingScene] = useState<Scene | null>(null);
 
   const handleTabChange = (tab: NavTab) => {
     setActiveTab(tab);
-    // If switching tabs away from scenes, we can reset active customizing scene
-    if (tab === 'home') {
+    // If navigating to home, generator or about, reset active scene background
+    if (tab !== 'scenes') {
       setActiveCustomizingScene(null);
     }
+  };
+
+  const handleSceneCreated = (newScene: Scene) => {
+    // Add new scene to beginning of list
+    setAllScenes((prev) => [newScene, ...prev]);
+    // Switch to Scenes tab and immediately open the created scene in mixer
+    setActiveTab('scenes');
+    setActiveCustomizingScene(newScene);
   };
 
   // Determine dynamic background
@@ -49,16 +61,31 @@ function App() {
               <button
                 className="button button-secondary"
                 type="button"
-                onClick={() => setActiveTab('scenes')}
+                onClick={() => setActiveTab('generator')}
               >
-                <span>Browse Soundscapes</span>
+                <span>Create Custom Scene</span>
               </button>
             </div>
           </section>
         )}
 
         {activeTab === 'scenes' && (
-          <SceneLibrary onSceneChange={setActiveCustomizingScene} />
+          activeCustomizingScene ? (
+            <SceneDetailView
+              scene={activeCustomizingScene}
+              onBack={() => setActiveCustomizingScene(null)}
+            />
+          ) : (
+            <SceneLibrary
+              scenes={allScenes}
+              onSceneChange={setActiveCustomizingScene}
+              onOpenConstructor={() => setActiveTab('generator')}
+            />
+          )
+        )}
+
+        {activeTab === 'generator' && (
+          <SceneGenerator onSceneCreated={handleSceneCreated} />
         )}
 
         {activeTab === 'about' && (
@@ -66,7 +93,7 @@ function App() {
             <h1 style={{ fontSize: '2.5rem' }}>About soundlab.</h1>
             <p className="hero-description" style={{ maxWidth: '700px', fontSize: '1.1rem' }}>
               soundlab helps you craft personalized audio environments to boost your productivity,
-              focus on study, or relax after a long day.
+              focus on study, or relax after a long day. Mix existing curated scenes or construct your own unique soundscapes.
             </p>
           </section>
         )}

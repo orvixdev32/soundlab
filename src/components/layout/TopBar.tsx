@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './TopBar.module.css';
 
-export type NavTab = 'home' | 'scenes' | 'about';
+export type NavTab = 'home' | 'scenes' | 'generator' | 'about';
 
 interface TopBarProps {
   activeTab: NavTab;
@@ -11,6 +11,7 @@ interface TopBarProps {
 const navigationItems: { label: string; tab: NavTab }[] = [
   { label: 'Home', tab: 'home' },
   { label: 'Scenes', tab: 'scenes' },
+  { label: 'Constructor', tab: 'generator' },
   { label: 'About', tab: 'about' },
 ];
 

@@ -1,23 +1,29 @@
 import React, { useState } from 'react';
-import { presetScenes } from '../../data/presets';
 import type { Scene } from '../../types/scene';
 import SceneCard from './SceneCard';
 import SceneDetailView from './SceneDetailView';
 import styles from './SceneLibrary.module.css';
 
 interface SceneLibraryProps {
+  scenes: Scene[];
   onSceneChange?: (scene: Scene | null) => void;
+  onOpenConstructor?: () => void;
 }
 
-export const SceneLibrary: React.FC<SceneLibraryProps> = ({ onSceneChange }) => {
+export const SceneLibrary: React.FC<SceneLibraryProps> = ({
+  scenes,
+  onSceneChange,
+  onOpenConstructor,
+}) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [activeCustomizingScene, setActiveCustomizingScene] = useState<Scene | null>(null);
 
   const categories = ['all', 'nature', 'urban', 'focus', 'relax'];
 
-  const filteredScenes = selectedCategory === 'all'
-    ? presetScenes
-    : presetScenes.filter((scene) => scene.category === selectedCategory);
+  const filteredScenes =
+    selectedCategory === 'all'
+      ? scenes
+      : scenes.filter((scene) => scene.category === selectedCategory);
 
   const handleOpenScene = (scene: Scene) => {
     setActiveCustomizingScene(scene);
@@ -63,6 +69,16 @@ export const SceneLibrary: React.FC<SceneLibraryProps> = ({ onSceneChange }) => 
             {category}
           </button>
         ))}
+
+        {onOpenConstructor && (
+          <button
+            type="button"
+            className={styles.createBtn}
+            onClick={onOpenConstructor}
+          >
+            <span>+ Create Scene</span>
+          </button>
+        )}
       </div>
 
       <div className={styles.grid}>

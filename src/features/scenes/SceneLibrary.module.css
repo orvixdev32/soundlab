@@ -76,6 +76,26 @@
   box-shadow: 0 4px 12px rgba(21, 30, 35, 0.2);
 }
 
+.createBtn {
+  background: #272a2d;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 22px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(21, 30, 35, 0.2);
+  transition: all 200ms ease;
+  margin-left: 8px;
+}
+
+.createBtn:hover {
+  background: #384247;
+  transform: translateY(-1px);
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
