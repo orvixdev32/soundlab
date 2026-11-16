@@ -17,7 +17,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(25%) contrast(110%) saturate(75%);
+  filter: brightness(38%) contrast(108%) saturate(70%);
   transform: scale(1.02);
   transition: filter var(--duration-slow) ease;
 }
@@ -59,10 +59,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
   color: var(--text-secondary);
   cursor: pointer;
   transition: color var(--duration-fast) ease;
@@ -167,11 +165,9 @@
   border: none;
   padding: 10px 24px;
   border-radius: 2px;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -262,10 +258,9 @@
 
 /* Right Console / Mixer */
 .mixerConsole {
-  background-color: var(--bg-base);
-  border: 1px solid var(--border-subtle);
-  border-radius: 4px;
-  padding: 32px;
+  background-color: rgba(14, 17, 19, 0.5);
+  border-top: 1px solid var(--border-subtle);
+  padding: 32px 0 0 0;
 }
 
 .consoleHeader {
@@ -278,40 +273,35 @@
 }
 
 .consoleHeading {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 600;
   color: var(--text-primary);
   margin: 0;
 }
 
 .consoleResetBtn {
   background: none;
-  border: 1px solid var(--border-subtle);
+  border: none;
   color: var(--text-muted);
-  padding: 4px 12px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  border-radius: 2px;
+  padding: 4px 0;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
   cursor: pointer;
-  transition: all var(--duration-fast) ease;
+  transition: color var(--duration-fast) ease;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .consoleResetBtn:hover {
-  border-color: var(--border-medium);
   color: var(--text-primary);
 }
 
 /* Master Fader Section */
 .masterFaderBlock {
-  padding: 20px;
-  background-color: var(--bg-elevated);
-  border-radius: 2px;
-  border: 1px solid var(--border-subtle);
-  margin-bottom: 28px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 24px;
 }
 
 .masterFaderHeader {
@@ -322,10 +312,9 @@
 }
 
 .faderLabel {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 500;
   color: var(--text-secondary);
 }
 
@@ -345,19 +334,21 @@
 .channelRow {
   display: flex;
   flex-direction: column;
-  padding: 16px;
-  background-color: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: 2px;
-  transition: border-color var(--duration-fast) ease;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: opacity var(--duration-fast) ease;
+}
+
+.channelRow:last-child {
+  border-bottom: none;
 }
 
 .channelRow:hover {
-  border-color: var(--border-medium);
+  opacity: 1;
 }
 
 .channelRow.muted {
-  opacity: 0.45;
+  opacity: 0.4;
 }
 
 .channelTop {
@@ -381,10 +372,8 @@
 }
 
 .channelTag {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
   color: var(--text-muted);
 }
 
@@ -394,10 +383,8 @@
   color: var(--text-muted);
   padding: 4px 10px;
   border-radius: 2px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
   cursor: pointer;
   transition: all var(--duration-fast) ease;
 }

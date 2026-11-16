@@ -36,16 +36,15 @@ function App() {
 
       <main>
         {activeTab === 'home' && (
-          <section className="heroCanvas" aria-label="Acoustic Prologue">
+          <section className="heroCanvas">
             <div className="heroContent">
-              <span className="heroStamp">Sound Architecture / 2026</span>
               <h1 className="heroTitle">
-                Acoustic spaces for the <span className="heroTitleEm">quiet mind</span>.
+                Sounds for the <span className="heroTitleEm">quiet mind</span>.
               </h1>
 
               <p className="heroStatement">
-                Soundlab is an ambient environment engine. Calibrate multi-layered organic soundscapes,
-                attenuate noise, and immerse your space in rain, hearth, and wilderness frequencies.
+                Soundlab helps you build personalized sound environments for focus, rest, and creativity.
+                Layer rain, wind, fire, and more — then shape the mix to suit the moment.
               </p>
 
               <div className="heroActions">
@@ -54,7 +53,7 @@ function App() {
                   className="btnPrimary"
                   onClick={() => setActiveTab('scenes')}
                 >
-                  Enter Environments →
+                  Browse Scenes →
                 </button>
 
                 <button
@@ -62,7 +61,7 @@ function App() {
                   className="btnSecondary"
                   onClick={() => setActiveTab('generator')}
                 >
-                  Synthesize Chamber
+                  Create a Scene
                 </button>
               </div>
             </div>
@@ -70,12 +69,12 @@ function App() {
             <div className="heroShowcase">
               <img
                 src="/images/forest.jpg"
-                alt="Rainy Pine Wilderness"
+                alt="Rainy forest"
                 className="heroImage"
               />
               <div className="showcaseCaption">
                 <span className="captionTitle">Rainy Forest</span>
-                <span className="captionMeta">Archetype 01 / Nature</span>
+                <span className="captionMeta">Nature · 4 layers</span>
               </div>
             </div>
           </section>
@@ -101,40 +100,37 @@ function App() {
         )}
 
         {activeTab === 'about' && (
-          <section className="philosophyView" aria-label="Acoustic Manifesto">
+          <section className="philosophyView">
             <header className="philosophyHeader">
-              <span className="philosophyKicker">Design Manifesto / Core Intent</span>
-              <h1 className="philosophyTitle">The Architecture of Silence</h1>
+              <h1 className="philosophyTitle">About Soundlab</h1>
             </header>
 
             <div className="manifestoSection">
               <p className="leadParagraph">
-                Silence is rarely an absence of sound; it is the presence of an atmosphere that
-                demands nothing from your attention.
+                Silence is rarely an absence of sound — it is the presence of an atmosphere
+                that asks nothing of your attention.
               </p>
 
               <p className="bodyParagraph">
-                Modern software overwhelms with sensory friction. Soundlab was conceived as an acoustic
-                antidote: a deliberate, art-directed space that lets you mix natural acoustic layers—from
-                the low hum of an alpine rainstorm to the dry crackle of evening pine wood.
+                Soundlab was built as an antidote to sensory overload: a simple, focused tool
+                for mixing natural audio layers — rain, wind, fire, birdsong, and city ambience —
+                into an environment that works for you.
               </p>
 
               <div className="principleGrid">
                 <div className="principleCard">
-                  <div className="principleNumber">01 / Organic Stratification</div>
-                  <h3 className="principleHeading">Real Layered Channels</h3>
+                  <h3 className="principleHeading">Layered by design</h3>
                   <p className="principleText">
-                    Soundscapes are never single flat tracks. They are living multi-track balances of
-                    wind, precipitation, timber, and spatial acoustics.
+                    Good soundscapes are never a single flat track. They are a live balance of
+                    multiple sounds, each adjusted to feel natural together.
                   </p>
                 </div>
 
                 <div className="principleCard">
-                  <div className="principleNumber">02 / Restrained Digital Craft</div>
-                  <h3 className="principleHeading">Functional Minimalism</h3>
+                  <h3 className="principleHeading">Simple on purpose</h3>
                   <p className="principleText">
-                    No neon glows, no synthetic dashboard fatigue. Every surface, fader, and typographic
-                    measure is calibrated for prolonged listening comfort.
+                    No synthetic dashboard fatigue. Every surface, fader, and label is shaped
+                    for extended, comfortable listening sessions.
                   </p>
                 </div>
               </div>

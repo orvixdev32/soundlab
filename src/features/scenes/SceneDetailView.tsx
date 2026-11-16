@@ -206,7 +206,7 @@ export const SceneDetailView: React.FC<SceneDetailViewProps> = ({ scene, onBack 
         {/* Top Control Strip */}
         <div className={styles.controlStrip}>
           <button type="button" className={styles.returnBtn} onClick={handleBack}>
-            ← All Environments
+            ← All Scenes
           </button>
 
           <div className={styles.stripActions}>
@@ -230,7 +230,7 @@ export const SceneDetailView: React.FC<SceneDetailViewProps> = ({ scene, onBack 
 
               {isTimerDropdownOpen && (
                 <div className={styles.timerMenu} role="menu">
-                  <div className={styles.timerMenuHeader}>Session Duration</div>
+                  <div className={styles.timerMenuHeader}>Stop after</div>
                   {TIMER_OPTIONS.map((opt) => (
                     <button
                       key={opt.minutes}
@@ -253,7 +253,7 @@ export const SceneDetailView: React.FC<SceneDetailViewProps> = ({ scene, onBack 
               onClick={handleTogglePlayback}
               disabled={!hasAnyAudioFile}
             >
-              <span>{isPlaying ? '⏸ Disengage' : '▶ Engage Acoustic Room'}</span>
+              <span>{isPlaying ? '⏸ Pause' : '▶ Play atmosphere'}</span>
             </button>
           </div>
         </div>
@@ -262,39 +262,31 @@ export const SceneDetailView: React.FC<SceneDetailViewProps> = ({ scene, onBack 
         <div className={styles.layoutGrid}>
           {/* Identity & Visual Focus */}
           <div className={styles.sceneIdentity}>
-            <span className={styles.categoryStamp}>Atmosphere / {scene.category}</span>
+            <span className={styles.categoryStamp}>{scene.category}</span>
             <h1 className={styles.sceneTitle}>{scene.title}</h1>
             <div className={styles.sceneSubtitle}>{scene.subtitle}</div>
             <p className={styles.sceneDescription}>{scene.description}</p>
-
-            <div className={styles.heroArtFrame}>
-              <img
-                src={scene.coverImage}
-                alt={scene.title}
-                className={styles.heroArtImg}
-              />
-            </div>
           </div>
 
           {/* Precision Audio Console */}
           <div className={styles.mixerConsole}>
             <div className={styles.consoleHeader}>
               <h2 className={styles.consoleHeading}>
-                Channel Routing ({scene.layers.length} Layers)
+                Sound Layers ({scene.layers.length})
               </h2>
               <button
                 type="button"
                 className={styles.consoleResetBtn}
                 onClick={handleReset}
               >
-                Reset Calibration
+                Reset
               </button>
             </div>
 
             {/* Master Fader */}
             <div className={styles.masterFaderBlock}>
               <div className={styles.masterFaderHeader}>
-                <span className={styles.faderLabel}>Master Gain</span>
+                <span className={styles.faderLabel}>Master Volume</span>
                 <span className={styles.faderValue}>{Math.round(masterVolume * 100)}%</span>
               </div>
               <div className={styles.sliderRow}>
@@ -342,7 +334,7 @@ export const SceneDetailView: React.FC<SceneDetailViewProps> = ({ scene, onBack 
                           {current.muted ? 'Muted' : 'Mute'}
                         </button>
                       ) : (
-                        <span className={styles.channelTag}>Awaiting Source</span>
+                        <span className={styles.channelTag}>No audio file</span>
                       )}
                     </div>
 

@@ -10,10 +10,10 @@ interface TopBarProps {
 }
 
 const navigationItems: { label: string; tab: NavTab }[] = [
-  { label: 'Overview', tab: 'home' },
-  { label: 'Soundscapes', tab: 'scenes' },
+  { label: 'Home', tab: 'home' },
+  { label: 'Scenes', tab: 'scenes' },
   { label: 'Constructor', tab: 'generator' },
-  { label: 'Philosophy', tab: 'about' },
+  { label: 'About', tab: 'about' },
 ];
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -32,7 +32,6 @@ export const TopBar: React.FC<TopBarProps> = ({
         >
           soundlab<span className={styles.logoDot} />
         </button>
-        <span className={styles.tagline}>Acoustic Sanctuaries</span>
       </div>
 
       <nav className={styles.nav} aria-label="Main navigation">
@@ -52,13 +51,15 @@ export const TopBar: React.FC<TopBarProps> = ({
       </nav>
 
       <div className={styles.actions}>
-        <div className={styles.statusIndicator}>
-          <span
-            className={styles.statusDot}
-            style={isPlaying ? { backgroundColor: 'var(--accent-amber)' } : undefined}
-          />
-          <span>{isPlaying ? 'Engine Live' : 'Engine Ready'}</span>
-        </div>
+        {isPlaying && (
+          <div className={styles.statusIndicator}>
+            <span
+              className={styles.statusDot}
+              style={{ backgroundColor: 'var(--accent-amber)' }}
+            />
+            <span>Now playing</span>
+          </div>
+        )}
       </div>
     </header>
   );

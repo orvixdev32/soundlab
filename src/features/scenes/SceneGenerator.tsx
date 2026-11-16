@@ -113,22 +113,20 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <span className={styles.kicker}>Atelier / Scene Synthesis</span>
-        <h1 className={styles.title}>Construct custom acoustic chamber</h1>
+        <h1 className={styles.title}>Create your soundscape</h1>
         <p className={styles.subtitle}>
-          Assemble bespoke multi-track environments by combining acoustic layers, mood archetypes,
-          and atmospheric visual backdrops.
+          Pick a cover image, choose your sounds, and give the scene a name.
         </p>
       </header>
 
       <form className={styles.workGrid} onSubmit={handleCreateScene}>
         {/* Module 1: Architecture & Visual Scenery */}
         <div className={styles.panel}>
-          <h2 className={styles.panelTitle}>1. Environment Blueprint</h2>
+          <h2 className={styles.panelTitle}>Scene Details</h2>
 
           <div className={styles.fieldGroup}>
             <label className={styles.fieldLabel} htmlFor="scene-title">
-              Chamber Identifier *
+              Scene name *
             </label>
             <input
               id="scene-title"
@@ -149,7 +147,7 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
 
           <div className={styles.fieldGroup}>
             <label className={styles.fieldLabel} htmlFor="scene-subtitle">
-              Atmospheric Subtitle
+              Tagline <span style={{ opacity: 0.5 }}>(optional)</span>
             </label>
             <input
               id="scene-subtitle"
@@ -163,7 +161,7 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
 
           <div className={styles.fieldGroup}>
             <label className={styles.fieldLabel} htmlFor="scene-desc">
-              Curator Notes (Optional)
+              Description <span style={{ opacity: 0.5 }}>(optional)</span>
             </label>
             <textarea
               id="scene-desc"
@@ -177,7 +175,7 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
 
           <div className={styles.fieldGroup}>
             <label className={styles.fieldLabel} htmlFor="scene-category">
-              Mood Archetype
+              Mood
             </label>
             <select
               id="scene-category"
@@ -187,17 +185,17 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
               }
               className={styles.fieldSelect}
             >
-              <option value="nature">Nature / Organic</option>
-              <option value="focus">Focus / Intellectual</option>
-              <option value="relax">Relax / Restorative</option>
-              <option value="urban">Urban / Architectural</option>
+              <option value="nature">Nature</option>
+              <option value="focus">Focus</option>
+              <option value="relax">Relax</option>
+              <option value="urban">Urban</option>
             </select>
           </div>
 
           {/* Visual Scenery Query */}
           <div className={styles.fieldGroup}>
             <label className={styles.fieldLabel} htmlFor="scene-keyword">
-              Query Backdrop By Keyword
+              Find a cover image
             </label>
             <div className={styles.searchBar}>
               <input
@@ -214,7 +212,7 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
                 onClick={() => fetchImageByKeyword(keyword)}
                 disabled={isSearchingImage}
               >
-                {isSearchingImage ? 'Searching' : 'Search Canvas'}
+                {isSearchingImage ? 'Searching...' : 'Search'}
               </button>
             </div>
           </div>
@@ -228,7 +226,7 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
               onError={() => setCoverUrl(CURATED_PRESETS[0].url)}
             />
             {isSearchingImage && (
-              <div className={styles.viewportOverlay}>Resolving Media Canvas...</div>
+              <div className={styles.viewportOverlay}>Searching...</div>
             )}
           </div>
 
@@ -258,14 +256,14 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
             className={styles.uploadTrigger}
             onClick={() => fileInputRef.current?.click()}
           >
-            ↑ Mount Custom Image File
+            Upload your own photo
           </button>
         </div>
 
         {/* Module 2: Channel Matrix */}
         <div className={styles.panel}>
           <h2 className={styles.panelTitle}>
-            2. Sound Layer Matrix ({selectedSoundIds.length} Selected)
+            Sound Layers ({selectedSoundIds.length} selected)
           </h2>
 
           <div className={styles.matrixGrid}>
@@ -296,7 +294,7 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
             className={styles.submitButton}
             disabled={!title.trim() || selectedSoundIds.length === 0}
           >
-            Synthesize & Engage Environment →
+            Create Scene →
           </button>
         </div>
       </form>

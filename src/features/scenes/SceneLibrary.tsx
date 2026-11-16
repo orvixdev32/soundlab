@@ -50,17 +50,15 @@ export const SceneLibrary: React.FC<SceneLibraryProps> = ({
   }
 
   return (
-    <section className={styles.container} aria-label="Curated Atmospheres Archive">
+    <section className={styles.container} aria-label="Soundscapes">
       <header className={styles.editorialHeader}>
         <div className={styles.leadColumn}>
-          <span className={styles.kicker}>Index of Atmospheres / v2.4</span>
           <h1 className={styles.heading}>
-            Curated environments for <span className={styles.headingEm}>deep focus</span> & reverie.
+            Sounds for <span className={styles.headingEm}>every mood</span>.
           </h1>
         </div>
         <p className={styles.description}>
-          Every soundscape is an acoustic ecosystem composed of multi-channel audio layers.
-          Step inside to calibrate individual frequencies, winds, precipitation, and room acoustics.
+          Each scene is built from multiple sound layers. Open one to adjust the mix.
         </p>
       </header>
 
@@ -84,7 +82,7 @@ export const SceneLibrary: React.FC<SceneLibraryProps> = ({
             className={styles.newSceneBtn}
             onClick={onOpenConstructor}
           >
-            <span>+ Construct Soundscape</span>
+            <span>+ Create Scene</span>
           </button>
         )}
       </div>
