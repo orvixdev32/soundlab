@@ -21,36 +21,41 @@ export const SceneCard: React.FC<SceneCardProps> = ({ scene, onOpen }) => {
           onOpen(scene);
         }
       }}
-      aria-label={`Enter soundscape: ${scene.title}`}
+      aria-label={`Open scene: ${scene.title}`}
     >
-      <div className={styles.mediaFrame}>
+      <div className={styles.imageContainer}>
         <img
           src={scene.coverImage}
           alt={scene.title}
           className={styles.image}
           loading="lazy"
         />
-        <div className={styles.metaOverlay}>
-          <span className={styles.categoryTag}>{scene.category}</span>
-          <span className={styles.layerCount}>{scene.layers.length} Layers</span>
-        </div>
+        <span className={styles.categoryBadge}>{scene.category}</span>
       </div>
 
       <div className={styles.body}>
-        <div className={styles.titleRow}>
+        <div className={styles.headerRow}>
           <h3 className={styles.title}>{scene.title}</h3>
+          <span className={styles.soundCount}>{scene.layers.length} sounds</span>
         </div>
-        <div className={styles.subtitle}>{scene.subtitle}</div>
-        <p className={styles.description}>{scene.description}</p>
+
+        {scene.subtitle && <p className={styles.subtitle}>{scene.subtitle}</p>}
+        {scene.description && <p className={styles.description}>{scene.description}</p>}
 
         <div className={styles.footer}>
-          <div className={styles.layersPreview}>
-            <span className={styles.layerItem}>
-              {scene.layers.slice(0, 3).map((l) => l.name).join(' · ')}
-              {scene.layers.length > 3 ? ' +' : ''}
-            </span>
-          </div>
-          <span className={styles.actionPrompt}>Enter Environment →</span>
+          <span className={styles.layerNames}>
+            {scene.layers.map((l) => l.name).join(', ')}
+          </span>
+          <button
+            type="button"
+            className={styles.openBtn}
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpen(scene);
+            }}
+          >
+            Listen
+          </button>
         </div>
       </div>
     </article>

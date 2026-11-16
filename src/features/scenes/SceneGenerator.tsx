@@ -98,10 +98,10 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
     const newScene: Scene = {
       id: `custom-${Date.now()}`,
       title: title.trim(),
-      subtitle: subtitle.trim() || 'Custom Acoustic Space',
+      subtitle: subtitle.trim() || 'Custom soundscape',
       description:
         description.trim() ||
-        `Atmosphere engineered with ${layers.map((l) => l.name).join(', ')}.`,
+        `Atmosphere with ${layers.map((l) => l.name).join(', ')}.`,
       category,
       coverImage: coverUrl,
       layers,
@@ -112,27 +112,27 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Create your soundscape</h1>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Create a Scene</h1>
         <p className={styles.subtitle}>
-          Pick a cover image, choose your sounds, and give the scene a name.
+          Assemble your own custom environment by combining sound layers and choosing a cover image.
         </p>
-      </header>
+      </div>
 
-      <form className={styles.workGrid} onSubmit={handleCreateScene}>
-        {/* Module 1: Architecture & Visual Scenery */}
+      <form className={styles.formGrid} onSubmit={handleCreateScene}>
+        {/* Left Column: Scene Metadata & Cover */}
         <div className={styles.panel}>
-          <h2 className={styles.panelTitle}>Scene Details</h2>
+          <h2 className={styles.panelTitle}>1. Scene Information</h2>
 
-          <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel} htmlFor="scene-title">
-              Scene name *
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="scene-title">
+              Scene Name *
             </label>
             <input
               id="scene-title"
               type="text"
               required
-              placeholder="e.g. Nordic Fjords, Tokyo Midnight..."
+              placeholder="e.g. Autumn Forest, Tokyo Rainy Night..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               onBlur={() => {
@@ -141,41 +141,41 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
                   fetchImageByKeyword(title.trim());
                 }
               }}
-              className={styles.fieldInput}
+              className={styles.input}
             />
           </div>
 
-          <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel} htmlFor="scene-subtitle">
-              Tagline <span style={{ opacity: 0.5 }}>(optional)</span>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="scene-subtitle">
+              Subtitle / Mood
             </label>
             <input
               id="scene-subtitle"
               type="text"
-              placeholder="e.g. Dense Fog & Low Frequency Rain"
+              placeholder="e.g. Distant wind with soft rain"
               value={subtitle}
               onChange={(e) => setSubtitle(e.target.value)}
-              className={styles.fieldInput}
+              className={styles.input}
             />
           </div>
 
-          <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel} htmlFor="scene-desc">
-              Description <span style={{ opacity: 0.5 }}>(optional)</span>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="scene-desc">
+              Description (optional)
             </label>
             <textarea
               id="scene-desc"
-              placeholder="Atmospheric narrative..."
+              placeholder="Brief notes about this atmosphere..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className={styles.fieldTextarea}
+              className={styles.textarea}
               rows={2}
             />
           </div>
 
-          <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel} htmlFor="scene-category">
-              Mood
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="scene-category">
+              Category
             </label>
             <select
               id="scene-category"
@@ -183,7 +183,7 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
               onChange={(e) =>
                 setCategory(e.target.value as 'focus' | 'relax' | 'nature' | 'urban')
               }
-              className={styles.fieldSelect}
+              className={styles.select}
             >
               <option value="nature">Nature</option>
               <option value="focus">Focus</option>
@@ -192,23 +192,26 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
             </select>
           </div>
 
-          {/* Visual Scenery Query */}
-          <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel} htmlFor="scene-keyword">
-              Find a cover image
+          <hr className={styles.divider} />
+
+          <h2 className={styles.panelTitle}>Cover Image</h2>
+
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="scene-keyword">
+              Search by Keyword
             </label>
-            <div className={styles.searchBar}>
+            <div className={styles.searchRow}>
               <input
                 id="scene-keyword"
                 type="text"
-                placeholder="e.g. dunes, fog, rain..."
+                placeholder="e.g. forest, mountains, coffee..."
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
-                className={styles.fieldInput}
+                className={styles.input}
               />
               <button
                 type="button"
-                className={styles.actionBtn}
+                className={styles.searchBtn}
                 onClick={() => fetchImageByKeyword(keyword)}
                 disabled={isSearchingImage}
               >
@@ -217,31 +220,32 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
             </div>
           </div>
 
-          {/* Scenery Viewport */}
-          <div className={styles.visualViewport}>
+          <div className={styles.previewContainer}>
             <img
               src={coverUrl}
-              alt="Canvas Preview"
-              className={styles.viewportImg}
+              alt="Cover preview"
+              className={styles.previewImg}
               onError={() => setCoverUrl(CURATED_PRESETS[0].url)}
             />
             {isSearchingImage && (
-              <div className={styles.viewportOverlay}>Searching...</div>
+              <div className={styles.previewOverlay}>Searching Wikipedia images...</div>
             )}
           </div>
 
-          {/* Presets & Local Upload */}
-          <div className={styles.presetBar}>
-            {CURATED_PRESETS.map((p) => (
-              <button
-                key={p.label}
-                type="button"
-                className={`${styles.presetChip} ${coverUrl === p.url ? styles.selected : ''}`}
-                onClick={() => setCoverUrl(p.url)}
-              >
-                {p.label}
-              </button>
-            ))}
+          <div className={styles.presetSection}>
+            <span className={styles.presetLabel}>Or select a preset:</span>
+            <div className={styles.presetButtons}>
+              {CURATED_PRESETS.map((p) => (
+                <button
+                  key={p.label}
+                  type="button"
+                  className={`${styles.presetChip} ${coverUrl === p.url ? styles.presetChipActive : ''}`}
+                  onClick={() => setCoverUrl(p.url)}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           <input
@@ -253,49 +257,63 @@ export const SceneGenerator: React.FC<SceneGeneratorProps> = ({ onSceneCreated }
           />
           <button
             type="button"
-            className={styles.uploadTrigger}
+            className={styles.uploadBtn}
             onClick={() => fileInputRef.current?.click()}
           >
-            Upload your own photo
+            Upload image from computer
           </button>
         </div>
 
-        {/* Module 2: Channel Matrix */}
+        {/* Right Column: Sound Layers Checklist */}
         <div className={styles.panel}>
-          <h2 className={styles.panelTitle}>
-            Sound Layers ({selectedSoundIds.length} selected)
-          </h2>
+          <div className={styles.panelHeaderRow}>
+            <h2 className={styles.panelTitle}>2. Choose Sound Layers</h2>
+            <span className={styles.selectionCount}>
+              {selectedSoundIds.length} {selectedSoundIds.length === 1 ? 'sound' : 'sounds'} selected
+            </span>
+          </div>
 
-          <div className={styles.matrixGrid}>
+          <p className={styles.panelHelp}>
+            Select the audio layers you want to include in this soundscape. You can adjust individual volumes in the player.
+          </p>
+
+          <div className={styles.soundsList}>
             {availableSounds.map((sound) => {
               const isSelected = selectedSoundIds.includes(sound.id);
               return (
                 <label
                   key={sound.id}
-                  className={`${styles.matrixItem} ${isSelected ? styles.active : ''}`}
+                  className={`${styles.soundItem} ${isSelected ? styles.soundItemActive : ''}`}
                 >
-                  <div className={styles.trackData}>
-                    <span className={styles.trackTitle}>{sound.name}</span>
-                    <span className={styles.trackCategory}>{sound.category}</span>
-                  </div>
                   <input
                     type="checkbox"
                     checked={isSelected}
                     onChange={() => handleToggleSound(sound.id)}
-                    className={styles.matrixCheck}
+                    className={styles.checkbox}
                   />
+                  <div className={styles.soundMeta}>
+                    <span className={styles.soundName}>{sound.name}</span>
+                    <span className={styles.soundCategory}>{sound.category}</span>
+                  </div>
                 </label>
               );
             })}
           </div>
 
-          <button
-            type="submit"
-            className={styles.submitButton}
-            disabled={!title.trim() || selectedSoundIds.length === 0}
-          >
-            Create Scene →
-          </button>
+          <div className={styles.submitSection}>
+            <button
+              type="submit"
+              className={styles.submitBtn}
+              disabled={!title.trim() || selectedSoundIds.length === 0}
+            >
+              Create Scene and Open Player →
+            </button>
+            {selectedSoundIds.length === 0 && (
+              <span className={styles.validationHint}>
+                Please select at least 1 sound layer.
+              </span>
+            )}
+          </div>
         </div>
       </form>
     </div>

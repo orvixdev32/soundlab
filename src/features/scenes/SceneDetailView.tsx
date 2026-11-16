@@ -17,10 +17,10 @@ interface LayerState {
 
 const TIMER_OPTIONS = [
   { label: 'Off', minutes: 0 },
-  { label: '15m', minutes: 15 },
-  { label: '30m', minutes: 30 },
-  { label: '45m', minutes: 45 },
-  { label: '60m', minutes: 60 },
+  { label: '15 min', minutes: 15 },
+  { label: '30 min', minutes: 30 },
+  { label: '45 min', minutes: 45 },
+  { label: '60 min', minutes: 60 },
 ];
 
 export const SceneDetailView: React.FC<SceneDetailViewProps> = ({ scene, onBack }) => {
@@ -191,179 +191,184 @@ export const SceneDetailView: React.FC<SceneDetailViewProps> = ({ scene, onBack 
   const hasAnyAudioFile = Object.values(layersState).some((l) => l.hasAudio);
 
   return (
-    <div className={styles.environment}>
-      {/* Background Ambience Stage */}
-      <div className={styles.backdropStage} aria-hidden="true">
-        <img
-          src={scene.coverImage}
-          alt=""
-          className={styles.backdropImage}
-        />
-        <div className={styles.backdropVignette} />
+    <div className={styles.container}>
+      {/* Top back navigation */}
+      <div className={styles.navigationRow}>
+        <button type="button" className={styles.backButton} onClick={handleBack}>
+          ← Back to all scenes
+        </button>
       </div>
 
-      <div className={styles.workstation}>
-        {/* Top Control Strip */}
-        <div className={styles.controlStrip}>
-          <button type="button" className={styles.returnBtn} onClick={handleBack}>
-            ← All Scenes
-          </button>
+      {/* Main Player Panel */}
+      <div className={styles.playerPanel}>
+        {/* Scene Header Deck */}
+        <div className={styles.sceneHeader}>
+          <div className={styles.coverWrapper}>
+            <img
+              src={scene.coverImage}
+              alt={scene.title}
+              className={styles.coverImage}
+            />
+          </div>
 
-          <div className={styles.stripActions}>
-            {/* Sleep / Focus Timer */}
-            <div className={styles.timerWrapper} ref={timerDropdownRef}>
-              <button
-                type="button"
-                className={`${styles.timerTrigger} ${timerDuration > 0 ? styles.timerActive : ''}`}
-                onClick={() => setIsTimerDropdownOpen(!isTimerDropdownOpen)}
-                aria-label="Set environment timer"
-              >
-                <span>⏱</span>
-                <span>
-                  {secondsRemaining !== null && isPlaying
-                    ? formatRemainingTime(secondsRemaining)
-                    : timerDuration > 0
-                    ? `${timerDuration}m`
-                    : 'Timer'}
-                </span>
-              </button>
-
-              {isTimerDropdownOpen && (
-                <div className={styles.timerMenu} role="menu">
-                  <div className={styles.timerMenuHeader}>Stop after</div>
-                  {TIMER_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.minutes}
-                      type="button"
-                      className={`${styles.timerOption} ${timerDuration === opt.minutes ? styles.selected : ''}`}
-                      onClick={() => handleSelectTimer(opt.minutes)}
-                    >
-                      <span>{opt.label}</span>
-                      {timerDuration === opt.minutes && <span>✓</span>}
-                    </button>
-                  ))}
-                </div>
-              )}
+          <div className={styles.metaWrapper}>
+            <div className={styles.badgeRow}>
+              <span className={styles.categoryBadge}>{scene.category}</span>
+              <span className={styles.layerSummary}>
+                {scene.layers.length} sound {scene.layers.length === 1 ? 'layer' : 'layers'}
+              </span>
             </div>
 
-            {/* Master Play/Pause */}
-            <button
-              type="button"
-              className={`${styles.masterPlayBtn} ${isPlaying ? styles.playing : ''}`}
-              onClick={handleTogglePlayback}
-              disabled={!hasAnyAudioFile}
-            >
-              <span>{isPlaying ? '⏸ Pause' : '▶ Play atmosphere'}</span>
-            </button>
+            <h1 className={styles.sceneTitle}>{scene.title}</h1>
+            {scene.subtitle && <p className={styles.sceneSubtitle}>{scene.subtitle}</p>}
+            {scene.description && <p className={styles.sceneDescription}>{scene.description}</p>}
+
+            <div className={styles.primaryControls}>
+              <button
+                type="button"
+                className={`${styles.playButton} ${isPlaying ? styles.playButtonActive : ''}`}
+                onClick={handleTogglePlayback}
+                disabled={!hasAnyAudioFile}
+              >
+                <span className={styles.playIcon}>{isPlaying ? '⏸' : '▶'}</span>
+                <span>{isPlaying ? 'Pause' : 'Play Atmosphere'}</span>
+              </button>
+
+              {/* Timer Dropdown */}
+              <div className={styles.timerContainer} ref={timerDropdownRef}>
+                <button
+                  type="button"
+                  className={`${styles.timerButton} ${timerDuration > 0 ? styles.timerButtonActive : ''}`}
+                  onClick={() => setIsTimerDropdownOpen(!isTimerDropdownOpen)}
+                >
+                  <span>⏱</span>
+                  <span>
+                    {secondsRemaining !== null && isPlaying
+                      ? `Timer: ${formatRemainingTime(secondsRemaining)}`
+                      : timerDuration > 0
+                      ? `Timer: ${timerDuration}m`
+                      : 'Set Timer'}
+                  </span>
+                </button>
+
+                {isTimerDropdownOpen && (
+                  <div className={styles.timerMenu}>
+                    <div className={styles.timerMenuTitle}>Sleep Timer</div>
+                    {TIMER_OPTIONS.map((opt) => (
+                      <button
+                        key={opt.minutes}
+                        type="button"
+                        className={`${styles.timerOption} ${timerDuration === opt.minutes ? styles.timerOptionSelected : ''}`}
+                        onClick={() => handleSelectTimer(opt.minutes)}
+                      >
+                        <span>{opt.label}</span>
+                        {timerDuration === opt.minutes && <span>✓</span>}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="button"
+                className={styles.resetButton}
+                onClick={handleReset}
+              >
+                Reset Mix
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Workstation Core Layout */}
-        <div className={styles.layoutGrid}>
-          {/* Identity & Visual Focus */}
-          <div className={styles.sceneIdentity}>
-            <span className={styles.categoryStamp}>{scene.category}</span>
-            <h1 className={styles.sceneTitle}>{scene.title}</h1>
-            <div className={styles.sceneSubtitle}>{scene.subtitle}</div>
-            <p className={styles.sceneDescription}>{scene.description}</p>
+        {/* Master Volume Bar */}
+        <div className={styles.masterVolumeSection}>
+          <div className={styles.masterVolumeInfo}>
+            <span className={styles.masterVolumeLabel}>Master Volume</span>
+            <span className={styles.masterVolumeValue}>{Math.round(masterVolume * 100)}%</span>
+          </div>
+          <div className={styles.masterVolumeSliderWrapper}>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={masterVolume}
+              onChange={(e) => handleMasterVolumeChange(parseFloat(e.target.value))}
+              aria-label="Master Volume"
+              className={styles.volumeRange}
+            />
+          </div>
+        </div>
+
+        {/* Channels Mixer Table */}
+        <div className={styles.mixerSection}>
+          <div className={styles.mixerHeader}>
+            <h2 className={styles.mixerTitle}>Sound Mixer</h2>
+            <span className={styles.mixerHelpText}>
+              Adjust volumes individually to create your preferred atmosphere balance.
+            </span>
           </div>
 
-          {/* Precision Audio Console */}
-          <div className={styles.mixerConsole}>
-            <div className={styles.consoleHeader}>
-              <h2 className={styles.consoleHeading}>
-                Sound Layers ({scene.layers.length})
-              </h2>
-              <button
-                type="button"
-                className={styles.consoleResetBtn}
-                onClick={handleReset}
-              >
-                Reset
-              </button>
-            </div>
+          <div className={styles.channelsList}>
+            {scene.layers.map((layer) => {
+              const current = layersState[layer.soundId] || {
+                volume: layer.defaultVolume,
+                muted: false,
+                hasAudio: false,
+              };
 
-            {/* Master Fader */}
-            <div className={styles.masterFaderBlock}>
-              <div className={styles.masterFaderHeader}>
-                <span className={styles.faderLabel}>Master Volume</span>
-                <span className={styles.faderValue}>{Math.round(masterVolume * 100)}%</span>
-              </div>
-              <div className={styles.sliderRow}>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  value={masterVolume}
-                  onChange={(e) => handleMasterVolumeChange(parseFloat(e.target.value))}
-                  className={styles.faderInput}
-                  aria-label="Master Volume"
-                />
-              </div>
-            </div>
-
-            {/* Layer Channels */}
-            <div className={styles.channelsList}>
-              {scene.layers.map((layer) => {
-                const current = layersState[layer.soundId] || {
-                  volume: layer.defaultVolume,
-                  muted: false,
-                  hasAudio: false,
-                };
-
-                return (
-                  <div
-                    key={layer.soundId}
-                    className={`${styles.channelRow} ${current.muted ? styles.muted : ''}`}
-                  >
-                    <div className={styles.channelTop}>
-                      <div className={styles.channelIdentity}>
-                        <span className={styles.channelName}>{layer.name}</span>
-                        {layer.category && (
-                          <span className={styles.channelTag}>{layer.category}</span>
-                        )}
-                      </div>
-
-                      {current.hasAudio ? (
-                        <button
-                          type="button"
-                          className={`${styles.muteSwitch} ${current.muted ? styles.isMuted : ''}`}
-                          onClick={() => handleToggleMute(layer.soundId)}
-                        >
-                          {current.muted ? 'Muted' : 'Mute'}
-                        </button>
-                      ) : (
-                        <span className={styles.channelTag}>No audio file</span>
-                      )}
-                    </div>
-
-                    <div className={styles.sliderRow}>
-                      <input
-                        type="range"
-                        min="0"
-                        max="1"
-                        step="0.01"
-                        disabled={current.muted || !current.hasAudio}
-                        value={current.muted || !current.hasAudio ? 0 : current.volume}
-                        onChange={(e) =>
-                          handleVolumeChange(layer.soundId, parseFloat(e.target.value))
-                        }
-                        className={styles.faderInput}
-                        aria-label={`${layer.name} channel volume`}
-                      />
-                      <span className={styles.channelLevel}>
-                        {!current.hasAudio
-                          ? '—'
-                          : current.muted
-                          ? '0%'
-                          : `${Math.round(current.volume * 100)}%`}
-                      </span>
-                    </div>
+              return (
+                <div
+                  key={layer.soundId}
+                  className={`${styles.channelRow} ${current.muted ? styles.channelMuted : ''}`}
+                >
+                  <div className={styles.channelInfo}>
+                    <span className={styles.channelName}>{layer.name}</span>
+                    {layer.category && (
+                      <span className={styles.channelCategory}>{layer.category}</span>
+                    )}
                   </div>
-                );
-              })}
-            </div>
+
+                  <div className={styles.channelSliderWrapper}>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.01"
+                      disabled={current.muted || !current.hasAudio}
+                      value={current.muted || !current.hasAudio ? 0 : current.volume}
+                      onChange={(e) =>
+                        handleVolumeChange(layer.soundId, parseFloat(e.target.value))
+                      }
+                      className={styles.volumeRange}
+                      aria-label={`${layer.name} channel volume`}
+                    />
+                  </div>
+
+                  <div className={styles.channelActions}>
+                    <span className={styles.channelPercentage}>
+                      {!current.hasAudio
+                        ? 'No file'
+                        : current.muted
+                        ? 'Muted'
+                        : `${Math.round(current.volume * 100)}%`}
+                    </span>
+
+                    {current.hasAudio ? (
+                      <button
+                        type="button"
+                        className={`${styles.muteButton} ${current.muted ? styles.muteButtonMuted : ''}`}
+                        onClick={() => handleToggleMute(layer.soundId)}
+                      >
+                        {current.muted ? 'Unmute' : 'Mute'}
+                      </button>
+                    ) : (
+                      <span className={styles.noAudioBadge}>Pending</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

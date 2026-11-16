@@ -1,4 +1,4 @@
-/* App.css — Editorial Design System Foundation */
+/* App.css — Authentic 2017-2019 Web Design Foundation */
 
 .page {
   position: relative;
@@ -6,235 +6,437 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: var(--bg-deep);
-  color: var(--text-primary);
+  background-color: var(--bg-page);
+  color: var(--text-main);
+}
+
+.mainContent {
+  flex-grow: 1;
 }
 
 /* ========================================================
-   EDITORIAL HERO SECTION
+   HOME / PRACTICAL HERO BANNER
 ======================================================== */
-.heroCanvas {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 64px;
-  align-items: center;
-  max-width: 1360px;
+.homeContainer {
+  max-width: 1100px;
   margin: 0 auto;
-  padding: clamp(60px, 12vh, 140px) 40px 80px;
+  padding: 32px 20px 60px;
   width: 100%;
 }
 
-.heroContent {
+.heroBanner {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 36px;
+  align-items: center;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 36px 40px;
+  margin-bottom: 40px;
+  box-shadow: var(--shadow-sm);
+}
+
+.heroTextColumn {
   display: flex;
   flex-direction: column;
 }
 
-/* stamp removed — intentionally empty */
+.heroKicker {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-primary);
+  margin-bottom: 8px;
+}
 
 .heroTitle {
+  margin: 0 0 14px 0;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-main);
+  letter-spacing: -0.015em;
+}
+
+.heroDescription {
   margin: 0 0 24px 0;
-  font-family: var(--font-serif);
-  font-size: clamp(3rem, 6vw, 5.4rem);
-  font-weight: 400;
-  line-height: 1.02;
-  letter-spacing: -0.025em;
-  color: var(--text-primary);
-}
-
-.heroTitleEm {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--accent-sand);
-}
-
-.heroStatement {
-  margin: 0 0 40px 0;
-  font-family: var(--font-sans);
-  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  font-size: 0.98rem;
   line-height: 1.6;
-  color: var(--text-secondary);
-  max-width: 540px;
+  color: #4A5568;
 }
 
-.heroActions {
+.heroButtonRow {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .btnPrimary {
-  background-color: var(--text-primary);
-  color: var(--text-inverse);
-  border: 1px solid var(--text-primary);
-  padding: 14px 28px;
-  border-radius: 2px;
-  font-family: var(--font-sans);
-  font-size: 0.9rem;
+  background-color: var(--accent-primary);
+  color: #FFFFFF;
+  border: 1px solid var(--accent-hover);
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
   font-weight: 600;
-  letter-spacing: 0.02em;
   cursor: pointer;
-  transition: all var(--duration-fast) ease;
+  transition: background-color var(--transition-fast);
 }
 
 .btnPrimary:hover {
-  background-color: #ffffff;
-  transform: translateY(-1px);
+  background-color: var(--accent-hover);
 }
 
 .btnSecondary {
-  background-color: transparent;
-  color: var(--text-primary);
-  border: 1px solid var(--border-medium);
-  padding: 14px 28px;
-  border-radius: 2px;
-  font-family: var(--font-sans);
-  font-size: 0.9rem;
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
   font-weight: 500;
-  letter-spacing: 0.02em;
   cursor: pointer;
-  transition: all var(--duration-fast) ease;
+  transition: all var(--transition-fast);
 }
 
 .btnSecondary:hover {
-  border-color: var(--accent-amber);
-  color: var(--accent-amber);
+  background-color: var(--bg-hover);
+  border-color: #BAC2CA;
 }
 
-/* Right atmospheric hero showcase */
-.heroShowcase {
+/* Featured Hero Card */
+.heroCardColumn {
+  width: 100%;
+}
+
+.featuredCard {
+  background-color: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.featuredCardImage {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 5;
-  border-radius: 4px;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
-  border: 1px solid var(--border-subtle);
-  background-color: var(--bg-base);
+  background-color: var(--bg-secondary);
 }
 
-.heroImage {
+.featuredImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: contrast(105%) brightness(85%);
-  transition: transform 600ms var(--ease-out);
+  display: block;
 }
 
-.heroShowcase:hover .heroImage {
-  transform: scale(1.03);
-}
-
-.showcaseCaption {
+.featuredBadge {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 24px;
-  background: linear-gradient(180deg, transparent 0%, rgba(14, 17, 19, 0.95) 100%);
+  top: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.92);
+  color: var(--accent-primary);
+  border: 1px solid var(--border-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.featuredCardBody {
+  padding: 16px;
+}
+
+.featuredCardHeader {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: flex-start;
+  margin-bottom: 8px;
 }
 
-.captionTitle {
-  font-family: var(--font-serif);
-  font-size: 1.25rem;
-  color: var(--text-primary);
+.featuredCardTitle {
+  margin: 0 0 2px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-main);
 }
 
-.captionMeta {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent-sand);
+.featuredCardMeta {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.btnPlayQuick {
+  background-color: var(--accent-primary);
+  color: #FFFFFF;
+  border: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btnPlayQuick:hover {
+  background-color: var(--accent-hover);
+}
+
+.featuredCardDesc {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
 }
 
 /* ========================================================
-   ABOUT / PHILOSOPHY VIEW
+   FEATURED SECTION & HOW IT WORKS
 ======================================================== */
-.philosophyView {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: clamp(60px, 10vh, 120px) 32px 100px;
+.featuredSection {
+  margin-bottom: 40px;
 }
 
-.philosophyHeader {
-  margin-bottom: 56px;
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 32px;
+.sectionHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
-.philosophyTitle {
+.sectionTitle {
+  margin: 0 0 4px 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.sectionSubtitle {
   margin: 0;
-  font-family: var(--font-serif);
-  font-size: clamp(2.6rem, 4.5vw, 4rem);
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
 }
 
-.manifestoSection {
+.linkBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.linkBtn:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+.featuredGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* 3-Step Guide */
+.guideSection {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-sm);
+}
+
+.guideTitle {
+  margin: 0 0 20px 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.guideGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.guideItem {
   display: flex;
   flex-direction: column;
-  gap: 32px;
 }
 
-.leadParagraph {
-  font-family: var(--font-serif);
-  font-size: clamp(1.25rem, 1.8vw, 1.6rem);
-  line-height: 1.5;
-  color: var(--text-primary);
+.guideNumber {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--bg-secondary);
+  color: var(--accent-primary);
+  font-size: 0.88rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
 }
 
-.bodyParagraph {
-  font-family: var(--font-sans);
-  font-size: 1.05rem;
-  line-height: 1.75;
-  color: var(--text-secondary);
-}
-
-.principleGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  margin-top: 24px;
-}
-
-.principleCard {
-  background-color: var(--bg-base);
-  border: 1px solid var(--border-subtle);
-  padding: 24px;
-  border-radius: 2px;
-}
-
-.principleHeading {
-  font-family: var(--font-sans);
-  font-size: 1.1rem;
+.guideHeading {
+  margin: 0 0 6px 0;
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--text-primary);
-  margin: 0 0 10px 0;
+  color: var(--text-main);
 }
 
-.principleText {
-  font-family: var(--font-sans);
-  font-size: 0.92rem;
+.guideText {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #4A5568;
+  line-height: 1.5;
+}
+
+/* ========================================================
+   ABOUT PAGE
+======================================================== */
+.aboutContainer {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 36px 20px 80px;
+  width: 100%;
+}
+
+.aboutPanel {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 36px 40px;
+  box-shadow: var(--shadow-sm);
+}
+
+.aboutTitle {
+  margin: 0 0 12px 0;
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.015em;
+}
+
+.aboutLead {
+  margin: 0 0 24px 0;
+  font-size: 1.05rem;
   line-height: 1.6;
   color: var(--text-secondary);
-  margin: 0;
 }
 
-@media (max-width: 900px) {
-  .heroCanvas {
+.aboutDivider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 24px 0;
+}
+
+.aboutSectionHeading {
+  margin: 20px 0 10px 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.aboutText {
+  margin: 0 0 16px 0;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #4A5568;
+}
+
+.aboutFeatureList {
+  margin: 0 0 20px 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.92rem;
+  color: #4A5568;
+  line-height: 1.55;
+}
+
+.aboutFooterNote {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* ========================================================
+   PRACTICAL FOOTER
+======================================================== */
+.footer {
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border-color);
+  padding: 20px 0;
+  margin-top: auto;
+}
+
+.footerContainer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footerLeft {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.footerBrand {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.footerTagline {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.footerNav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.footerNav button {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.footerNav button:hover {
+  color: var(--accent-primary);
+  text-decoration: underline;
+}
+
+@media (max-width: 860px) {
+  .heroBanner {
     grid-template-columns: 1fr;
-    gap: 40px;
-    padding: 40px 20px 60px;
+    padding: 24px;
+    gap: 24px;
   }
-  .heroShowcase {
-    aspect-ratio: 16 / 10;
-  }
-  .principleGrid {
+  .guideGrid {
     grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .aboutPanel {
+    padding: 24px;
   }
 }

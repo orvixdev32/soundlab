@@ -19,7 +19,13 @@ export const SceneLibrary: React.FC<SceneLibraryProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [activeCustomizingScene, setActiveCustomizingScene] = useState<Scene | null>(null);
 
-  const categories = ['all', 'nature', 'urban', 'focus', 'relax'];
+  const categories = [
+    { id: 'all', label: 'All Scenes' },
+    { id: 'nature', label: 'Nature' },
+    { id: 'urban', label: 'Urban' },
+    { id: 'focus', label: 'Focus' },
+    { id: 'relax', label: 'Relax' },
+  ];
 
   const filteredScenes =
     selectedCategory === 'all'
@@ -50,30 +56,13 @@ export const SceneLibrary: React.FC<SceneLibraryProps> = ({
   }
 
   return (
-    <section className={styles.container} aria-label="Soundscapes">
-      <header className={styles.editorialHeader}>
-        <div className={styles.leadColumn}>
-          <h1 className={styles.heading}>
-            Sounds for <span className={styles.headingEm}>every mood</span>.
-          </h1>
-        </div>
-        <p className={styles.description}>
-          Each scene is built from multiple sound layers. Open one to adjust the mix.
-        </p>
-      </header>
-
-      <div className={styles.controlBar}>
-        <div className={styles.filterGroup} role="tablist" aria-label="Filter by mood">
-          {categories.map((category) => (
-            <button
-              key={category}
-              type="button"
-              className={`${styles.filterButton} ${selectedCategory === category ? styles.active : ''}`}
-              onClick={() => setSelectedCategory(category)}
-            >
-              {category}
-            </button>
-          ))}
+    <section className={styles.container} aria-label="Soundscape Library">
+      <div className={styles.header}>
+        <div>
+          <h1 className={styles.title}>Soundscapes</h1>
+          <p className={styles.subtitle}>
+            Explore and listen to multi-layered sound environments. Click any scene to adjust the mix.
+          </p>
         </div>
 
         {onOpenConstructor && (
@@ -82,21 +71,56 @@ export const SceneLibrary: React.FC<SceneLibraryProps> = ({
             className={styles.newSceneBtn}
             onClick={onOpenConstructor}
           >
-            <span>+ Create Scene</span>
+            + Create Scene
           </button>
         )}
       </div>
 
-      <div className={styles.galleryGrid}>
-        {filteredScenes.map((scene) => (
-          <SceneCard
-            key={scene.id}
-            scene={scene}
-            isActive={false}
-            onOpen={handleOpenScene}
-          />
-        ))}
+      <div className={styles.filterBar}>
+        <div className={styles.categoryTabs} role="tablist">
+          {categories.map((cat) => {
+            const count =
+              cat.id === 'all'
+                ? scenes.length
+                : scenes.filter((s) => s.category === cat.id).length;
+
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                className={`${styles.tabBtn} ${selectedCategory === cat.id ? styles.tabBtnActive : ''}`}
+                onClick={() => setSelectedCategory(cat.id)}
+              >
+                {cat.label} <span className={styles.countBadge}>({count})</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
+
+      {filteredScenes.length === 0 ? (
+        <div className={styles.emptyState}>
+          <p>No soundscapes found in this category.</p>
+          <button
+            type="button"
+            className={styles.resetFilterBtn}
+            onClick={() => setSelectedCategory('all')}
+          >
+            Show all scenes
+          </button>
+        </div>
+      ) : (
+        <div className={styles.grid}>
+          {filteredScenes.map((scene) => (
+            <SceneCard
+              key={scene.id}
+              scene={scene}
+              isActive={false}
+              onOpen={handleOpenScene}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 };
